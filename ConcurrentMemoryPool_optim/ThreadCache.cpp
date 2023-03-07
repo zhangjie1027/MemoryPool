@@ -69,7 +69,7 @@ void *ThreadCache::FetchFromCentralCache(size_t index, size_t size)
     else
     {
         //  >1，返回一个，剩下挂到自由链表
-        _freeLists[index].PushRange(NextObj(start), end);
+        _freeLists[index].PushRange(NextObj(start), end, actualNum - 1);
         return start;
     }
 }

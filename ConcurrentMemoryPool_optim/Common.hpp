@@ -49,7 +49,7 @@ inline static void *SystemAlloc(size_t kPage)
 inline static void SystemFree(void *ptr)
 {
 #ifdef _WIN32
-    virtual(ptr, 0, MEM_RELEASE);
+    virtualFree(ptr, 0, MEM_RELEASE);
 #else
     brk(ptr);
 #endif
@@ -75,13 +75,15 @@ public:
     {
         NextObj(obj) = _head;
         _head = obj;
+        ++_size;
     }
 
     // 批量头插
-    void PushRange(void *start, void *end)
+    void PushRange(void *start, void *end,size_t n)
     {
         NextObj(end) = _head;
         _head = start;
+        _size+=n;
     }
 
     // 批量头删
@@ -105,6 +107,7 @@ public:
     {
         void *obj = _head;
         _head = NextObj(_head);
+        --_size;
         return obj;
     }
 
